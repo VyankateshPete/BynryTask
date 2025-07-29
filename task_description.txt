@@ -1,0 +1,75 @@
+
+PART A:  
+  1. Identify Issues:
+
+    Technical Issues:
+        1. The code does not check if the SKU is unique before creating product.
+        2. There is no validation for the price to ensure it is a decimal value.
+        3. The initial quantity needs to be 0 or needs to be set according to the quantity.
+    Business Logic Issues:
+        1. Products can exist in multiple warehouses, but the current implementation assumes a single warehouse.
+        2. There is no error handling for database operations (e.g., what if the database commit fails?).
+
+  2. Explain Impact:
+        1. To check if SKU is Unique: If duplicate SKUs are allowed, it can lead to confusion and incorrect inventory tracking.
+        2. No Validation to check if price is integer or decimal : If the price is not validated, it could lead to incorrect pricing in the system.
+        3. Initial Quantity: If initial_quantity is not defined, it may result in inventory records being created with null or incorrect values.
+        4. Warehouse Handling: Not accommodating multiple warehouses could lead to inventory mismanagement.
+
+  3. Provide Fixes:
+        The code added in the file name create_products.py
+
+
+PART B:
+  > Design Schema:
+      Tables:
+        Companies
+            id (Primary Key, Integer)
+            name (String)
+        Warehouses
+            id (Primary Key, Integer)
+            company_id (Foreign Key, Integer)
+            name (String)
+        Products
+            id (Primary Key, Integer)
+            name (String)
+            sku (String, Unique)
+            price (Decimal)
+        Inventory
+            id (Primary Key, Integer)
+            product_id (Foreign Key, Integer)
+            warehouse_id (Foreign Key, Integer)
+            quantity (Integer)
+            last_updated (DateTime)
+        Suppliers
+            id (Primary Key, Integer)
+            name (String)
+            contact_email (String)
+
+  > Identify Gaps:
+        What are the specific fields required for suppliers?
+        How do we handle product bundles?
+        What additional tracking is needed for inventory changes?
+
+  > Explain Decisions:
+        Indexes: Added on SKU for fast lookups.
+        Constraints: Foreign keys ensure referential integrity between tables.
+
+
+PART C:
+  > Write Implementation:
+        The code is added to the file low_stock_alert.py
+
+  > Handle Edge Cases:
+    What if there are no products with low stock?
+    What if the company ID does not exist?
+
+  > Explain Approach:
+    The endpoint fetches products with low stock and checks for recent sales activity.
+    It constructs an alert for each product and returns the total count.
+
+
+
+
+
+
